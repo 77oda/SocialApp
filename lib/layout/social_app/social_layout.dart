@@ -8,7 +8,6 @@ import '../../shared/components/components.dart';
 import '../../shared/styles/icon_broken.dart';
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
-//kkkkkkkk
 
 class SocialLayout extends StatelessWidget {
   @override
