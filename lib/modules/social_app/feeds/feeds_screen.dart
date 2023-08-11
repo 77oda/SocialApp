@@ -1,10 +1,9 @@
 import 'dart:ui';
-
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-
+import 'package:test123/shared/components/constants.dart';
+import 'package:video_viewer/video_viewer.dart';
 import '../../../layout/social_app/cubit/cubit.dart';
 import '../../../layout/social_app/cubit/states.dart';
 import '../../../models/social_app/post_model.dart';
@@ -25,7 +24,8 @@ class FeedsScreen extends StatelessWidget
             SocialCubit.get(context).getPosts();
             await Future.delayed(const Duration(seconds: 2));
           },
-          child: ConditionalBuilder(
+          child: state is! SocialGetPostsLoadingState?
+            ConditionalBuilder(
             condition: SocialCubit.get(context).posts.isNotEmpty,
             builder: (context) => SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -76,21 +76,31 @@ class FeedsScreen extends StatelessWidget
                 ],
               ),
             ),
-            fallback: (context) => const Center(child: CircularProgressIndicator()),
-          ),
+            fallback: (context) =>Center(child: Text('No posts',style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 15),),),
+          ):
+          const Center(child: CircularProgressIndicator()),
+
         );
       },
     );
   }
 
-  Widget buildPostItem(PostModel model, context,index) => Card(
+  Widget buildPostItem(PostModel model, context,index) {
+    List likes =[];
+    model.likes!.forEach((key, value) {
+      if(value=='true'){
+        likes!.add(key);
+      }
+    });
+    return Card(
     clipBehavior: Clip.antiAliasWithSaveLayer,
-    elevation: 5.0,
+    elevation: 7.0,
     margin: const EdgeInsets.symmetric(
-      horizontal: 8.0,
+      horizontal: 10.0,
+      vertical: 5
     ),
     child: Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -150,7 +160,7 @@ class FeedsScreen extends StatelessWidget
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
-              vertical: 15.0,
+              vertical: 10.0,
             ),
             child: Container(
               width: double.infinity,
@@ -158,208 +168,121 @@ class FeedsScreen extends StatelessWidget
               color: Colors.grey[300],
             ),
           ),
-          Text(
-            '${model.text}',
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(
-              color: Colors.black
+          if(model.text !='')
+          Padding(
+            padding: const EdgeInsetsDirectional.only(
+                bottom: 5.0
+            ),
+            child: Text(
+              '${model.text}',
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                color: Colors.black
+              ),
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(
-          //     bottom: 10.0,
-          //     top: 5.0,
-          //   ),
-          //   child: Container(
-          //     width: double.infinity,
-          //     child: Wrap(
-          //       children: [
-          //         Padding(
-          //           padding: const EdgeInsetsDirectional.only(
-          //             end: 6.0,
-          //           ),
-          //           child: Container(
-          //             height: 25.0,
-          //             child: MaterialButton(
-          //               onPressed: () {},
-          //               minWidth: 1.0,
-          //               padding: EdgeInsets.zero,
-          //               child: Text(
-          //                 '#software',
-          //                 style:
-          //                     Theme.of(context).textTheme.caption.copyWith(
-          //                           color: defaultColor,
-          //                         ),
-          //               ),
-          //             ),
-          //           ),
-          //         ),
-          //         Padding(
-          //           padding: const EdgeInsetsDirectional.only(
-          //             end: 6.0,
-          //           ),
-          //           child: Container(
-          //             height: 25.0,
-          //             child: MaterialButton(
-          //               onPressed: () {},
-          //               minWidth: 1.0,
-          //               padding: EdgeInsets.zero,
-          //               child: Text(
-          //                 '#flutter',
-          //                 style:
-          //                     Theme.of(context).textTheme.caption.copyWith(
-          //                           color: defaultColor,
-          //                         ),
-          //               ),
-          //             ),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           if(model.postImage != '')
-            Padding(
-              padding: const EdgeInsetsDirectional.only(
-                  top: 15.0
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                '${model.postImage}',
+                fit: BoxFit.cover,
               ),
-              child: Container(
-                height: 400.0,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    4.0,
+            ),
+          if(model.postVideo != '')
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: VideoViewer(
+                enableVerticalSwapingGesture: false,
+                  style: VideoViewerStyle(
+                    // volumeBarStyle: VolumeBarStyle(bar: BarStyle.volume(background: defaultColor)),
+                    forwardAndRewindStyle: ForwardAndRewindStyle(backgroundColor: defaultColor),
+                    progressBarStyle: ProgressBarStyle(backgroundColor: defaultColor),
+                      loading: const CircularProgressIndicator(
+                        color: defaultColor,
+                      ),
+                    playAndPauseStyle: PlayAndPauseWidgetStyle(background: defaultColor)
                   ),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      '${model.postImage}',
-                    ),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+                  controller: VideoViewerController(),
+                  source: {
+                    "SubRip Text":
+                    VideoSource(video: VideoPlayerController.network('${model.postVideo}'),
+                    )
+                  }),
             ),
           Padding(
             padding: const EdgeInsets.symmetric(
-              vertical: 5.0,
+              vertical: 10
+            ),
+            child: Container(
+              width: double.infinity,
+              height: 1.0,
+              color: Colors.grey[300],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+            horizontal: 7
             ),
             child: Row(
               children: [
-                Expanded(
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5.0,
+                  ),
                   child: InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 5.0,
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            IconBroken.Heart,
-                            size: 16.0,
-                            color: Colors.red,
-                          ),
-                          const SizedBox(
-                            width: 5.0,
-                          ),
-                          Text(
-                            '${SocialCubit.get(context).likes[index]}',
-                            style: Theme.of(context).textTheme.caption,
-                          ),
-                        ],
-                      ),
+                    onTap: () {
+                      SocialCubit.get(context).likePost(SocialCubit.get(context).postsId[index]);
+                    },
+                    child: Row(
+                      children: [
+                         Icon(
+                         likes.contains(uId) ? Icons.favorite :Icons.favorite_border_outlined,
+                          size: 22.0,
+                          color: defaultColor,
+                        ),
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                        Text(
+                          '${likes!.length}' ,
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ],
                     ),
-                    onTap: () {},
                   ),
                 ),
-                Expanded(
-                  child: InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 5.0,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Icon(
-                            IconBroken.Chat,
-                            size: 16.0,
-                            color: Colors.amber,
-                          ),
-                          const SizedBox(
-                            width: 5.0,
-                          ),
-                          Text(
-                            '0 comment',
-                            style: Theme.of(context).textTheme.caption,
-                          ),
-                        ],
-                      ),
+                const Spacer(),
+                InkWell(
+                  onTap: (){},
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 5.0,
                     ),
-                    onTap: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Icon(
+                          IconBroken.Chat,
+                          size: 20.0,
+                          color: Colors.amber,
+                        ),
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                        Text(
+                          '0 comment',
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 10.0,
-            ),
-            child: Container(
-              width: double.infinity,
-              height: 1.0,
-              color: Colors.grey[300],
-            ),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: InkWell(
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 18.0,
-                        backgroundImage: NetworkImage(
-                          '${SocialCubit.get(context).userModel!.image}',
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 15.0,
-                      ),
-                      Text(
-                        'write a comment ...',
-                        style:
-                        Theme.of(context).textTheme.caption!.copyWith(),
-                      ),
-                    ],
-                  ),
-                  onTap: () {},
-                ),
-              ),
-              InkWell(
-                child: Row(
-                  children: [
-                    const Icon(
-                      IconBroken.Heart,
-                      size: 16.0,
-                      color: Colors.red,
-                    ),
-                    const SizedBox(
-                      width: 5.0,
-                    ),
-                    Text(
-                      'Like',
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                  ],
-                ),
-                onTap: () {
-                  SocialCubit.get(context).likePost(SocialCubit.get(context).postsId[index]);
-                },
-              ),
-            ],
-          ),
         ],
       ),
     ),
   );
+}
 }

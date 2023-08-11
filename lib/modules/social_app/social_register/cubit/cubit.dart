@@ -15,7 +15,7 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
   static SocialRegisterCubit get(context) => BlocProvider.of(context);
 
   String? id ;
-
+  List<String> nameArray = [];
   void userRegister({
     required String name,
     required String email,
@@ -24,6 +24,9 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
   }) {
     //print('hello');
 
+    for (int i = 0; i < name.length; i++) {
+      nameArray.add(name.substring(0, i + 1).toLowerCase());
+    }
     emit(SocialRegisterLoadingState());
 
     FirebaseAuth.instance
@@ -36,6 +39,7 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
         phone: phone,
         email: email,
         name: name,
+        nameArray: nameArray
       );
        id= value.user!.uid;
        if(value.user!.emailVerified==false){
@@ -52,16 +56,18 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
     required String email,
     required String phone,
     required String uId,
+    required List nameArray
   }) {
     SocialUserModel model = SocialUserModel(
       name: name,
       email: email,
       phone: phone,
       uId: uId,
-      bio: 'write you bio ...',
+      bio: '',
       cover: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
       image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
       isEmailVerified: false,
+      nameArray: nameArray
     );
 
     FirebaseFirestore.instance

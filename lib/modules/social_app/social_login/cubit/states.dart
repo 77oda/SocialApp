@@ -11,6 +11,12 @@ class SocialLoginSuccessState extends SocialLoginStates
   SocialLoginSuccessState(this.uId);
 }
 
+class SocialGoogleLoginSuccessState extends SocialLoginStates
+{
+  final String uId;
+
+  SocialGoogleLoginSuccessState(this.uId);
+}
 class SocialLoginErrorState extends SocialLoginStates
 {
   final String error;
@@ -19,3 +25,14 @@ class SocialLoginErrorState extends SocialLoginStates
 }
 
 class SocialChangePasswordVisibilityState extends SocialLoginStates {}
+
+class SocialPassResentLoadingState extends SocialLoginStates {}
+
+class SocialPassResentErrorState extends SocialLoginStates {
+  final String error;
+
+  SocialPassResentErrorState(this.error);
+}
+
+class SocialPassResentSuccessState extends SocialLoginStates {
+}

@@ -40,22 +40,21 @@ dependencies:
   conditional_builder_null_safety: ^0.0.6
   bloc: ^8.1.0
   flutter_bloc: ^8.1.1
-  smooth_page_indicator: ^1.0.0+2
   hexcolor: ^3.0.1
   dio: ^5.3.0
   fluttertoast: ^8.0.9
   shared_preferences: ^2.0.15
-  carousel_slider: ^4.1.1
   image_picker: ^1.0.1
   desktop_window: ^0.4.0
   responsive_builder: ^0.7.0
+  video_player: ^2.5.1
+  video_viewer: ^1.2.7
   # firebase
   firebase_core: ^2.15.0
   firebase_auth: ^4.7.1
   cloud_firestore: ^4.8.3
   firebase_storage: ^11.2.5
   firebase_messaging: ^14.6.5
-  google_sign_in: ^6.1.4
 
 dev_dependencies:
   flutter_test:

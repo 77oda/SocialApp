@@ -13,6 +13,8 @@ class SocialGetUserErrorState extends SocialStates
   SocialGetUserErrorState(this.error);
 }
 
+class SocialToggleSuccessState extends SocialStates {}
+
 
 class SocialGetAllUsersLoadingState extends SocialStates {}
 
@@ -74,6 +76,18 @@ class SocialUserUpdateLoadingState extends SocialStates {}
 
 class SocialUserUpdateErrorState extends SocialStates {}
 
+class SocialUserUpdateSuccessState extends SocialStates {}
+
+class SocialSearchLoadingState extends SocialStates {}
+
+class SocialSearchSuccessState extends SocialStates {}
+
+class SocialSearchErrorState extends SocialStates
+{
+  final String error;
+
+  SocialSearchErrorState(this.error);
+}
 
 // create post
 
@@ -96,3 +110,6 @@ class SocialSendMessageErrorState extends SocialStates {}
 class SocialGetMessagesSuccessState extends SocialStates {}
 
 class SocialGetMessagesLoadingState extends SocialStates {}
+
+
+class SocialEditVideoSuccessState extends SocialStates {}

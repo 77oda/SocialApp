@@ -7,6 +7,7 @@ class SocialUserModel {
   String? cover;
   String? bio;
   bool? isEmailVerified;
+  List? nameArray;
 
   SocialUserModel({
     this.email,
@@ -17,6 +18,7 @@ class SocialUserModel {
     this.cover,
     this.bio,
     this.isEmailVerified,
+    this.nameArray
   });
 
   SocialUserModel.fromJson(Map<String, dynamic> json)
@@ -29,6 +31,7 @@ class SocialUserModel {
     cover = json['cover'];
     bio = json['bio'];
     isEmailVerified = json['isEmailVerified'];
+    nameArray= json['nameArray'];
   }
 
   Map<String, dynamic> toMap()
@@ -42,6 +45,7 @@ class SocialUserModel {
       'cover':cover,
       'bio':bio,
       'isEmailVerified':isEmailVerified,
+      'nameArray':nameArray
     };
   }
 }

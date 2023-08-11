@@ -103,7 +103,6 @@ class MyApp extends StatelessWidget {
         builder: (context,state){
           return MaterialApp(
             theme: lightTheme,
-            darkTheme: darkTheme,
             themeMode:ThemeMode.light,
             home: startWidget,
             debugShowCheckedModeBanner: false,

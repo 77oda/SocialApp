@@ -1,7 +1,10 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test123/layout/social_app/cubit/cubit.dart';
+import 'package:test123/modules/social_app/forget_pass/forget_pass_screen.dart';
 import 'package:test123/shared/components/constants.dart';
+import 'package:test123/shared/styles/colors.dart';
 
 
 import '../../../layout/social_app/social_layout.dart';
@@ -36,10 +39,14 @@ class SocialLoginScreen extends StatelessWidget {
             ).then((value)
             {
               uId=state.uId;
+              SocialCubit.get(context).getPosts();
+              SocialCubit.get(context).getUsers();
+              SocialCubit.get(context).getUserData();
               navigateAndFinish(
                 context,
                 SocialLayout(),
               );
+              SocialLoginCubit.get(context).updateEmailVerivied();
             });
           }
         },
@@ -110,7 +117,20 @@ class SocialLoginScreen extends StatelessWidget {
                           prefix: Icons.lock_outline,
                         ),
                         const SizedBox(
-                          height: 30.0,
+                          height: 10.0,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                          GestureDetector(
+                            onTap: (){
+                              navigateTo(context,  ForgetPassScreen());
+                            },
+                            child: const Text('Forget Password?',style: TextStyle(color: defaultColor,fontWeight: FontWeight.bold),),
+                          )
+                        ],),
+                        const SizedBox(
+                          height: 10.0,
                         ),
                         ConditionalBuilder(
                           condition: state is! SocialLoginLoadingState,
@@ -130,7 +150,7 @@ class SocialLoginScreen extends StatelessWidget {
                               const Center(child: CircularProgressIndicator()),
                         ),
                         const SizedBox(
-                          height: 15.0,
+                          height: 5.0,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -149,6 +169,22 @@ class SocialLoginScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
+                        
+                        // InkWell(
+                        //   onTap: (){
+                        //     SocialLoginCubit.get(context).signInWithGoogle();
+                        //   },
+                        //   child: const Center(
+                        //     child: CircleAvatar(
+                        //       radius: 23,
+                        //       backgroundColor: defaultColor,
+                        //       child:Icon(FontAwesomeIcons.google,color: Colors.white,) ,
+                        //     ),
+                        //   ),
+                        // )
                       ],
                     ),
                   ),

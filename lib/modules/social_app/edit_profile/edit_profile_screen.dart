@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,7 +9,10 @@ import 'package:image_picker/image_picker.dart';
 import '../../../layout/social_app/cubit/cubit.dart';
 import '../../../layout/social_app/cubit/states.dart';
 import '../../../shared/components/components.dart';
+import '../../../shared/components/constants.dart';
+import '../../../shared/network/local/cache_helper.dart';
 import '../../../shared/styles/icon_broken.dart';
+import '../social_login/social_login_screen.dart';
 
 class EditProfileScreen extends StatelessWidget {
   var nameController = TextEditingController();
@@ -17,7 +22,11 @@ class EditProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is SocialUserUpdateSuccessState){
+          showToast(text: 'Edit profile successfully', state: ToastStates.SUCCESS);
+        }
+      },
       builder: (context, state) {
         var userModel = SocialCubit.get(context).userModel;
         var profileImage = SocialCubit.get(context).profileImage;
@@ -29,7 +38,7 @@ class EditProfileScreen extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Edit Profile'),
+            title: const Text('Edit Profile'),
             actions: [
               defaultTextButton(
                 function: () {
@@ -44,6 +53,11 @@ class EditProfileScreen extends StatelessWidget {
                 width: 15.0,
               ),
             ],
+            leading: IconButton(icon :const Icon(IconBroken.Arrow___Left_2),onPressed: (){
+              Navigator.pop(context);
+              SocialCubit.get(context).profileImage=null;
+              SocialCubit.get(context).coverImage=null;
+            },),
             titleSpacing: 5.0,
           ),
           body: SingleChildScrollView(
@@ -244,6 +258,45 @@ class EditProfileScreen extends StatelessWidget {
                     },
                     label: 'Phone',
                     prefix: IconBroken.Call,
+                  ),
+                  Row(
+                    children: [
+                      OutlinedButton(
+                        onPressed: ()
+                        {
+                          FirebaseMessaging.instance.subscribeToTopic('announcements');
+                        },
+                        child: const Text(
+                          'subscribe',
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20.0,
+                      ),
+                      OutlinedButton(
+                        onPressed: ()
+                        {
+                          FirebaseMessaging.instance.unsubscribeFromTopic('announcements');
+                        },
+                        child: const Text(
+                          'unsubscribe',
+                        ),
+                      )
+                      ,
+                      OutlinedButton(
+                        onPressed: () async
+                        {
+                          await FirebaseAuth.instance.signOut();
+                          await CacheHelper.removeData(key: 'uId');
+                          uId=null;
+                          navigateAndFinish(context, SocialLoginScreen());
+                          SocialCubit.get(context).currentIndex=0;
+                        },
+                        child: const Text(
+                          'LOGOUT',
+                        ),
+                      )
+                    ],
                   ),
                 ],
               ),
