@@ -93,7 +93,7 @@ class ChatDetailsScreen extends StatelessWidget {
                                   horizontal: 15.0,
                                 ),
                                 child: TextFormField(
-                                  style: TextStyle( color: Colors.black),
+                                  style: const TextStyle( color: Colors.black),
                                   controller: messageController,
                                   decoration: const InputDecoration(
                                     border: InputBorder.none,

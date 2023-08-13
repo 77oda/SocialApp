@@ -13,6 +13,7 @@ import '../../../layout/social_app/cubit/states.dart';
 import '../../../shared/components/components.dart';
 import '../../../shared/components/constants.dart';
 import '../../../shared/styles/icon_broken.dart';
+import '../comments/comments_screen.dart';
 import '../edit_profile/edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget
@@ -237,6 +238,8 @@ Widget listView(context){
     physics: const NeverScrollableScrollPhysics(),
     itemBuilder: (context, index)  {
       var model=SocialCubit.get(context).listViewPosts[index];
+      var postId=SocialCubit.get(context).listViewPostsId[index];
+      var comment =SocialCubit.get(context).comments[index];
       List likes =[];
       model.likes!.forEach((key, value) {
         if(value=='true'){
@@ -422,13 +425,16 @@ Widget listView(context){
                               width: 5.0,
                             ),
                             Text(
-                              '0 comment',
+                              '$comment comment',
                               style: Theme.of(context).textTheme.caption,
                             ),
                           ],
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        SocialCubit.get(context).getComments(postId);
+                        navigateTo(context, CommentsScreen(postId: postId));
+                      },
                     ),
                   ),
                 ],

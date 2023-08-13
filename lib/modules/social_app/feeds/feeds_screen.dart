@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test123/shared/components/components.dart';
 import 'package:test123/shared/components/constants.dart';
 import 'package:video_viewer/video_viewer.dart';
 import '../../../layout/social_app/cubit/cubit.dart';
@@ -9,6 +10,7 @@ import '../../../layout/social_app/cubit/states.dart';
 import '../../../models/social_app/post_model.dart';
 import '../../../shared/styles/colors.dart';
 import '../../../shared/styles/icon_broken.dart';
+import '../comments/comments_screen.dart';
 
 class FeedsScreen extends StatelessWidget
 {
@@ -24,9 +26,8 @@ class FeedsScreen extends StatelessWidget
             SocialCubit.get(context).getPosts();
             await Future.delayed(const Duration(seconds: 2));
           },
-          child: state is! SocialGetPostsLoadingState?
-            ConditionalBuilder(
-            condition: SocialCubit.get(context).posts.isNotEmpty,
+          child:ConditionalBuilder(
+            condition: SocialCubit.get(context).posts.isNotEmpty && SocialCubit.get(context).comments.isNotEmpty,
             builder: (context) => SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
@@ -64,7 +65,9 @@ class FeedsScreen extends StatelessWidget
                   ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) => buildPostItem(SocialCubit.get(context).posts[index],context,index),
+                    itemBuilder: (context, index) => buildPostItem(SocialCubit.get(context).posts[index],context,index,SocialCubit.get(context).postsId[index],
+                        SocialCubit.get(context).comments[index]
+                    ),
                     separatorBuilder: (context, index) => const SizedBox(
                       height: 8.0,
                     ),
@@ -76,16 +79,14 @@ class FeedsScreen extends StatelessWidget
                 ],
               ),
             ),
-            fallback: (context) =>Center(child: Text('No posts',style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 15),),),
-          ):
-          const Center(child: CircularProgressIndicator()),
-
+            fallback: (context) =>const Center(child: CircularProgressIndicator()),
+        )
         );
       },
     );
   }
 
-  Widget buildPostItem(PostModel model, context,index) {
+  Widget buildPostItem(PostModel model, context,index,String postId , String comments) {
     List likes =[];
     model.likes!.forEach((key, value) {
       if(value=='true'){
@@ -253,7 +254,10 @@ class FeedsScreen extends StatelessWidget
                 ),
                 const Spacer(),
                 InkWell(
-                  onTap: (){},
+                  onTap: (){
+                    SocialCubit.get(context).getComments(postId);
+                    navigateTo(context, CommentsScreen(postId: postId));
+                  },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: 5.0,
@@ -270,7 +274,7 @@ class FeedsScreen extends StatelessWidget
                           width: 5.0,
                         ),
                         Text(
-                          '0 comment',
+                          '$comments comment',
                           style: Theme.of(context).textTheme.caption,
                         ),
                       ],
