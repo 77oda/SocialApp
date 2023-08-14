@@ -27,7 +27,8 @@ class FeedsScreen extends StatelessWidget
             await Future.delayed(const Duration(seconds: 2));
           },
           child:ConditionalBuilder(
-            condition: SocialCubit.get(context).posts.isNotEmpty && SocialCubit.get(context).comments.isNotEmpty,
+            condition: SocialCubit.get(context).posts.isNotEmpty,
+                // && SocialCubit.get(context).comments.isNotEmpty,
             builder: (context) => SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
@@ -66,7 +67,7 @@ class FeedsScreen extends StatelessWidget
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) => buildPostItem(SocialCubit.get(context).posts[index],context,index,SocialCubit.get(context).postsId[index],
-                        SocialCubit.get(context).comments[index]
+                        // SocialCubit.get(context).comments[index]
                     ),
                     separatorBuilder: (context, index) => const SizedBox(
                       height: 8.0,
@@ -86,11 +87,13 @@ class FeedsScreen extends StatelessWidget
     );
   }
 
-  Widget buildPostItem(PostModel model, context,index,String postId , String comments) {
+  Widget buildPostItem(PostModel model, context,index,String postId ,
+      // String comments
+      ) {
     List likes =[];
     model.likes!.forEach((key, value) {
       if(value=='true'){
-        likes!.add(key);
+        likes.add(key);
       }
     });
     return Card(
@@ -150,12 +153,12 @@ class FeedsScreen extends StatelessWidget
               const SizedBox(
                 width: 15.0,
               ),
-              IconButton(
-                icon: const Icon(
+              const Padding(
+                padding: EdgeInsets.only(right: 12),
+                child: Icon(
                   Icons.more_horiz,
-                  size: 16.0,
+                  size: 18.0,
                 ),
-                onPressed: () {},
               ),
             ],
           ),
@@ -274,7 +277,7 @@ class FeedsScreen extends StatelessWidget
                           width: 5.0,
                         ),
                         Text(
-                          '$comments comment',
+                          'comments',
                           style: Theme.of(context).textTheme.caption,
                         ),
                       ],

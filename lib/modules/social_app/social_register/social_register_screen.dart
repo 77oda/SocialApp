@@ -9,6 +9,7 @@ import '../../../layout/social_app/social_layout.dart';
 import '../../../shared/components/components.dart';
 import '../../../shared/components/constants.dart';
 import '../../../shared/network/local/cache_helper.dart';
+import '../../../shared/styles/icon_broken.dart';
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
 
@@ -51,7 +52,16 @@ class SocialRegisterScreen extends StatelessWidget {
         },
         builder: (context, state) {
           return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  IconBroken.Arrow___Left_2,
+                ),
+              ),
+            ),
             body: Center(
               child: SingleChildScrollView(
                 child: Padding(

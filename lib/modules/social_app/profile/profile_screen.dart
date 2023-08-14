@@ -94,17 +94,24 @@ class ProfileScreen extends StatelessWidget
                     children: [
                       Expanded(
                         child: InkWell(
-                          child: Column(
-                            children: [
-                              Text(
-                                '${SocialCubit.get(context).numPosts}',
-                                style: Theme.of(context).textTheme.subtitle2,
-                              ),
-                              Text(
-                                'Posts',
-                                style: Theme.of(context).textTheme.caption,
-                              ),
-                            ],
+                          child: Container(
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${SocialCubit.get(context).numPosts}',
+                                  style: Theme.of(context).textTheme.subtitle2!.copyWith(color: Colors.white),
+                                ),
+                                Text(
+                                  'Posts',
+                                  style: Theme.of(context).textTheme.caption!.copyWith(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                            decoration:  BoxDecoration(
+                              color: defaultColor,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: defaultColor)
+                            ),
                           ),
                           onTap: () {},
                         ),
@@ -165,39 +172,37 @@ class ProfileScreen extends StatelessWidget
                     Expanded(
                       child: OutlinedButton(
                         onPressed: (){
-                         SocialCubit.get(context).isGrid==false ? SocialCubit.get(context).togglePosts() : null;
-                        },
-                        child:  Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.grid_on,color:SocialCubit.get(context).isGrid==true ? defaultColor :Colors.black,),
-                            const SizedBox(width:5 ,),
-                             Text('Photos',style: TextStyle(color:SocialCubit.get(context).isGrid==true ? defaultColor :Colors.black),)
-                          ],
-                        ),),
-                    ),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: (){
-                          SocialCubit.get(context).isGrid==true ? SocialCubit.get(context).togglePosts() : null;
+                          SocialCubit.get(context).isList==false ? SocialCubit.get(context).togglePosts() : null;
                         },
                         child:Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.list,color:SocialCubit.get(context).isGrid==false ? defaultColor :Colors.black,),
+                            Icon(Icons.list,color:SocialCubit.get(context).isList==true ? defaultColor :Colors.black,),
                             const SizedBox(width:5 ,),
-                            Text('Posts',style: TextStyle(color:SocialCubit.get(context).isGrid==false ? defaultColor :Colors.black),)
+                            Text('Posts',style: TextStyle(color:SocialCubit.get(context).isList==true ? defaultColor :Colors.black),)
                           ],
                         ),)
-                    )
+                    ),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: (){
+                          SocialCubit.get(context).isList==true ? SocialCubit.get(context).togglePosts() : null;
+                        },
+                        child:  Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.grid_on,color:SocialCubit.get(context).isList==false ? defaultColor :Colors.black,),
+                            const SizedBox(width:5 ,),
+                            Text('Photos',style: TextStyle(color:SocialCubit.get(context).isList==false ? defaultColor :Colors.black),)
+                          ],
+                        ),),
+                    ),
                   ],
                 ),
-                // state is SocialUserUpdateLoadingState ?
-                // const Center(child: LinearProgressIndicator()) : Container(),
 
-                if(SocialCubit.get(context).isGrid==true)
+                if(SocialCubit.get(context).isList==false)
                   gridView(context),
-                if(SocialCubit.get(context).isGrid==false)
+                if(SocialCubit.get(context).isList==true)
                   listView(context)
               ],
             ),
@@ -239,7 +244,7 @@ Widget listView(context){
     itemBuilder: (context, index)  {
       var model=SocialCubit.get(context).listViewPosts[index];
       var postId=SocialCubit.get(context).listViewPostsId[index];
-      var comment =SocialCubit.get(context).comments[index];
+      // var comment =SocialCubit.get(context).comments[index];
       List likes =[];
       model.likes!.forEach((key, value) {
         if(value=='true'){
@@ -303,12 +308,26 @@ Widget listView(context){
                 const SizedBox(
                   width: 15.0,
                 ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.more_horiz,
-                    size: 16.0,
-                  ),
-                  onPressed: () {},
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.delete,
+                        size: 18.0,
+                        color: Colors.red,
+                      ),
+                      onPressed: () {
+                        SocialCubit.get(context).deletePost(postId);
+                      },
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(right: 12,left: 3),
+                      child: Icon(
+                          Icons.more_horiz,
+                          size: 18.0,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -388,7 +407,7 @@ Widget listView(context){
                         children: [
                           InkWell(
                             onTap: () {
-                              SocialCubit.get(context).likePost(SocialCubit.get(context).postsId[index]);
+                              SocialCubit.get(context).likePost(postId);
                             },
                             child: Icon(
                               likes.contains(uId) ? Icons.favorite :Icons.favorite_border_outlined,
@@ -425,7 +444,7 @@ Widget listView(context){
                               width: 5.0,
                             ),
                             Text(
-                              '$comment comment',
+                              'comments',
                               style: Theme.of(context).textTheme.caption,
                             ),
                           ],

@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test123/layout/social_app/social_layout.dart';
+import 'package:test123/modules/social_app/visit_profile/visit_profile_screen.dart';
 import 'package:test123/shared/styles/colors.dart';
 import 'package:test123/shared/styles/icon_broken.dart';
 
@@ -36,28 +37,35 @@ class UsersScreen extends StatelessWidget
   }
 }
 
-Widget buildChatItem(SocialUserModel model, context) => Padding(
+Widget buildChatItem(SocialUserModel model, context) =>
+    InkWell(
+      onTap: (){
+        SocialCubit.get(context).getProfile(model.uId);
+        navigateTo(context, VisitProfileScreen());
+      },
+      child: Padding(
   padding: const EdgeInsets.all(20.0),
   child: Row(
-    children: [
-      CircleAvatar(
-        radius: 25.0,
-        backgroundImage: NetworkImage(
-          '${model.image}',
+      children: [
+        CircleAvatar(
+          radius: 25.0,
+          backgroundImage: NetworkImage(
+            '${model.image}',
+          ),
         ),
-      ),
-      const SizedBox(
-        width: 15.0,
-      ),
-      Text(
-        '${model.name}',
-        style: const TextStyle(
-          height: 1.4,
+        const SizedBox(
+          width: 15.0,
         ),
-      ),
-    ],
+        Text(
+          '${model.name}',
+          style: const TextStyle(
+            height: 1.4,
+          ),
+        ),
+      ],
   ),
-);
+),
+    );
 
 
 Container buildNoContent(){
