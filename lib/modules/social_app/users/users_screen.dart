@@ -27,7 +27,7 @@ class UsersScreen extends StatelessWidget
             ListView.separated(
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) =>
-                  buildChatItem(SocialCubit.get(context).searchUsers![index], context),
+                  buildSearchItem(SocialCubit.get(context).searchUsers![index], context),
               separatorBuilder: (context, index) => myDivider(),
               itemCount: SocialCubit.get(context).searchUsers!.length,
             ) :buildNoContent() ,
@@ -37,7 +37,7 @@ class UsersScreen extends StatelessWidget
   }
 }
 
-Widget buildChatItem(SocialUserModel model, context) =>
+Widget buildSearchItem(SocialUserModel model, context) =>
     InkWell(
       onTap: (){
         SocialCubit.get(context).getProfile(model.uId);

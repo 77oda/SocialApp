@@ -50,7 +50,6 @@ dependencies:
   video_player: ^2.5.1
   video_viewer: ^1.2.7
   uuid: ^3.0.5
-  dropdown_button2: ^2.3.8
   # firebase
   firebase_core: ^2.15.0
   firebase_auth: ^4.7.1

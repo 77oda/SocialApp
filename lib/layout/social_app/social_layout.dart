@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test123/modules/social_app/notifications/notifications_screen.dart';
 
 import '../../modules/social_app/new_post/new_post_screen.dart';
 import '../../shared/components/components.dart';
@@ -64,8 +65,12 @@ class SocialLayout extends StatelessWidget {
                   icon: const Icon(
                     IconBroken.Notification,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    SocialCubit.get(context).getNotification();
+                    navigateTo(context, NotificationsScreen());
+                  },
                 ),
+              const SizedBox(width: 5,)
             ],
           ),
           body: cubit.screens[cubit.currentIndex],

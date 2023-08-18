@@ -67,13 +67,16 @@ class NewPostScreen extends StatelessWidget {
           ),
           body: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: ListView(
+            child: Column(
               children: [
                 if (state is SocialCreatePostLoadingState)
-                  const LinearProgressIndicator(),
-                if (state is SocialCreatePostLoadingState)
-                  const SizedBox(
-                    height: 5.0,
+                  const Column(
+                    children: [
+                      LinearProgressIndicator(),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                    ],
                   ),
                 Row(
                   children: [
@@ -95,109 +98,105 @@ class NewPostScreen extends StatelessWidget {
                   ],
                 ),
                 Expanded(
-                  child: TextFormField(
-                    maxLines: 8,
-                    style: const TextStyle(color: Colors.black),
-                    controller: textController,
-                    decoration: const InputDecoration(
-                      hintText: 'what is on your mind ...',
-                      border: InputBorder.none,
+                  child: ListView(
+                    physics: const ScrollPhysics(),
+                    children:[
+                      TextFormField(
+                      maxLines: 9,
+                      style: const TextStyle(color: Colors.black),
+                      controller: textController,
+                      decoration: const InputDecoration(
+                        hintText: 'what is on your mind ...',
+                        border: InputBorder.none,
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 12.0,
-                ),
-                if(SocialCubit.get(context).postFile != null && SocialCubit.get(context).videoPlayerController != null)
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        SizedBox(
-                          height: 400,
-                          child: SocialCubit.get(context)
+                      if(SocialCubit.get(context).postFile != null && SocialCubit.get(context).videoPlayerController != null)
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            SizedBox(
+                              height: 400,
+                              child: SocialCubit.get(context)
                                   .videoPlayerController!
                                   .value
                                   .isInitialized
-                              ? AspectRatio(
-                                  aspectRatio: SocialCubit.get(context)
-                                      .videoPlayerController!
-                                      .value
-                                      .aspectRatio,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Stack(
-                                      alignment: AlignmentDirectional.topEnd,
-                                      children: [
-                                        VideoPlayer(
-                                            SocialCubit.get(context)
-                                                .videoPlayerController!),
-                                        IconButton(
-                                          icon: const CircleAvatar(
-                                            radius: 20.0,
-                                            child: Icon(
-                                              Icons.close,
-                                              size: 16.0,
-                                            ),
+                                  ? AspectRatio(
+                                aspectRatio: SocialCubit.get(context)
+                                    .videoPlayerController!
+                                    .value
+                                    .aspectRatio,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Stack(
+                                    alignment: AlignmentDirectional.topEnd,
+                                    children: [
+                                      VideoPlayer(
+                                          SocialCubit.get(context)
+                                              .videoPlayerController!),
+                                      IconButton(
+                                        icon: const CircleAvatar(
+                                          radius: 20.0,
+                                          child: Icon(
+                                            Icons.close,
+                                            size: 16.0,
                                           ),
-                                          onPressed: ()
-                                          {
-                                            SocialCubit.get(context).removePostFile();
-                                          },
                                         ),
-                                        Align(
-                                          alignment: Alignment.center,
-                                          child: IconButton(
-                                            onPressed: () {
-                                              if(state is! SocialCreatePostLoadingState) {
-                                                SocialCubit.get(context).editPlayingVideo();
-                                              }
-                                            },
-                                            icon: Icon(SocialCubit.get(context).isPlay
-                                                ? Icons.pause
-                                                : Icons.play_arrow),
-                                            color: defaultColor,
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                        onPressed: ()
+                                        {
+                                          SocialCubit.get(context).removePostFile();
+                                        },
+                                      ),
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            if(state is! SocialCreatePostLoadingState) {
+                                              SocialCubit.get(context).editPlayingVideo();
+                                            }
+                                          },
+                                          icon: Icon(SocialCubit.get(context).isPlay
+                                              ? Icons.pause
+                                              : Icons.play_arrow),
+                                          color: defaultColor,
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                )
-                              : Container(),
+                                ),
+                              )
+                                  : Container(),
+                            ),
+
+                          ],
                         ),
-
-                      ],
-                    ),
-
-                if(SocialCubit.get(context).postFile != null && SocialCubit.get(context).videoPlayerController == null)
-                  Container(
-                    alignment: Alignment.center,
-                    height: 400.0,
-                   child: Stack(
-                     alignment: AlignmentDirectional.topEnd,
-                     children: [
-                       ClipRRect(
-                           borderRadius: BorderRadius.circular(10),
-                           child: Image.file(SocialCubit.get(context).postFile!,fit: BoxFit.contain,)),
-                       IconButton(
-                         icon: const CircleAvatar(
-                           radius: 20.0,
-                           child: Icon(
-                             Icons.close,
-                             size: 16.0,
-                           ),
-                         ),
-                         onPressed: ()
-                         {
-                           SocialCubit.get(context).removePostFile();
-                         },
-                       ),
-                     ],
-                   ),
+                      if(SocialCubit.get(context).postFile != null && SocialCubit.get(context).videoPlayerController == null)
+                        Container(
+                          alignment: Alignment.center,
+                          height: 400.0,
+                          child: Stack(
+                            alignment: AlignmentDirectional.topEnd,
+                            children: [
+                              ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.file(SocialCubit.get(context).postFile!,fit: BoxFit.contain,)),
+                              IconButton(
+                                icon: const CircleAvatar(
+                                  radius: 20.0,
+                                  child: Icon(
+                                    Icons.close,
+                                    size: 16.0,
+                                  ),
+                                ),
+                                onPressed: ()
+                                {
+                                  SocialCubit.get(context).removePostFile();
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                    ]
                   ),
-                if (SocialCubit.get(context).postFile == null)
-                  const SizedBox(height: 400),
-                const SizedBox(
-                  height: 14.0,
                 ),
                 Row(
                   children: [

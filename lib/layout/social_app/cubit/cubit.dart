@@ -10,8 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:test123/layout/social_app/cubit/states.dart';
 import 'package:test123/layout/social_app/social_layout.dart';
 import 'package:test123/models/social_app/comment_model.dart';
+import 'package:test123/models/social_app/notification_model.dart';
 import 'package:test123/shared/components/constants.dart';
-import 'package:uuid/uuid.dart';
 import 'package:video_player/video_player.dart';
 
 
@@ -396,7 +396,6 @@ class SocialCubit extends Cubit<SocialStates> {
       postVideo: postVideo??'',
       likes: {},
     );
-
     FirebaseFirestore.instance
         .collection('posts')
         .add(model.toMap())
@@ -410,19 +409,13 @@ class SocialCubit extends Cubit<SocialStates> {
 
   List<PostModel> posts = [];
   List<String> postsId = [];
-  // List<String> comments =[];
   void getPosts ()
   {
     FirebaseFirestore.instance.collection('posts').orderBy('time',descending: true).snapshots().listen((event) {
       posts=[];
       postsId=[];
-      // comments=[];
       event.docs.forEach((element) {
-        //  FirebaseFirestore.instance.collection('posts').doc(element.id).collection('comments').get().then((event) {
-        //   comments.add('${event.docs.length}');
-        //   emit(SocialGetPostsSuccessState());
-        //
-        // });
+
          postsId.add(element.id);
          posts.add(PostModel.fromJson(element.data()));
       });
@@ -430,7 +423,7 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
-  void likePost(String postId ) {
+  void likePost(String postId) {
     PostModel? post;
     FirebaseFirestore.instance
         .collection('posts')
@@ -444,6 +437,7 @@ class SocialCubit extends Cubit<SocialStates> {
             .doc(postId)
             .set({'likes': {'$uId': 'false'}},SetOptions(merge: true))
             .then((value) {
+          deleteLikeToNotification(postId);
           emit(SocialLikePostSuccessState());
         }).catchError((error) {
           emit(SocialLikePostErrorState(error.toString()));
@@ -455,17 +449,90 @@ class SocialCubit extends Cubit<SocialStates> {
             .doc(postId)
             .set({'likes': {'$uId': 'true'}},SetOptions(merge: true),)
             .then((value) {
+          addLikeToNotification(postId);
           emit(SocialLikePostSuccessState());
         }).catchError((error) {
           emit(SocialLikePostErrorState(error.toString()));
         });
       }
     });
+  }
 
+  void addLikeToNotification(String postId){
+    var now=DateTime.now();
+    FirebaseFirestore.instance.collection('notifications')
+        .doc(uId)
+        .collection('notificationItems')
+        .doc(postId)
+        .set({
+        'notify': FieldValue.arrayUnion([ {
+    'type': 'like',
+    'comment' : '',
+    'name': userModel!.name,
+    'uId': uId,
+    'image': userModel!.image,
+    'postId': postId,
+    'dateTime': ''
+    }])
+    },SetOptions(merge: true)
+    );
+  }
 
+  void deleteLikeToNotification(String postId){
+    FirebaseFirestore.instance.collection('notifications')
+        .doc(uId)
+        .collection('notificationItems')
+        .doc(postId)
+        .set({
+      'notify': FieldValue.arrayRemove([ {
+        'type': 'like',
+        'comment' : '',
+        'name': userModel!.name,
+        'uId': uId,
+        'image': userModel!.image,
+        'postId': postId,
+        'dateTime':''
+      }])
+    },SetOptions(merge: true)
+    );
 
   }
 
+  void addCommentToNotification(String postId , String comment){
+    String now='${DateTime.now()}';
+    FirebaseFirestore.instance.collection('notifications')
+        .doc(uId)
+        .collection('notificationItems')
+        .doc(postId)
+        .set({
+      'notify':  FieldValue.arrayUnion( [ {
+        'type': 'comment',
+        'comment':comment,
+        'name': userModel!.name,
+        'uId': uId,
+        'image': userModel!.image,
+        'postId': postId,
+        'dateTime': now
+      }])
+
+    },SetOptions(merge: true));
+  }
+
+  List<NotificationModel> notificationModel = [];
+  void getNotification (){
+   emit(SocialGetNotificationsLoadingState());
+    FirebaseFirestore.instance.collection('notifications')
+        .doc(uId)
+        .collection('notificationItems').limit(50).snapshots().listen((value) {
+          print('${value.docs.length}');
+      notificationModel =[];
+      value.docs.forEach((element) {
+    notificationModel.add(NotificationModel.fromJson(element.data()['notify'] as List));
+    print('${notificationModel}');
+    emit(SocialGetNotificationsSuccessState());
+      });
+    });
+  }
 
   void commentPost({
     required String postId,
@@ -482,7 +549,6 @@ class SocialCubit extends Cubit<SocialStates> {
       image: image,
       uId: uId
     );
-
         FirebaseFirestore.instance
             .collection('posts')
             .doc(postId)
@@ -490,6 +556,7 @@ class SocialCubit extends Cubit<SocialStates> {
             .add(commentModel.toMap()).then((value) {
               getPosts();
               getUserData();
+              addCommentToNotification(postId ,text);
           emit(SocialCommentPostSuccessState());
         }).catchError((error) {
           emit(SocialCommentPostErrorState(error.toString()));
@@ -631,6 +698,8 @@ class SocialCubit extends Cubit<SocialStates> {
   }
   //Search//////////////////////////////////////////////////////////
 
+
+  //PostVisit//////////////////////////////////////////////////////////
   int? numPostsVisit;
   List<PostModel> gridPostsVisit = [];
   List<PostModel> listViewPostsVisit = [];
@@ -696,4 +765,6 @@ class SocialCubit extends Cubit<SocialStates> {
     }
     emit(SocialToggleSuccessState());
   }
+//PostVisit//////////////////////////////////////////////////////////
+
 }

@@ -44,6 +44,10 @@ class SocialGetCommentsLoadingState extends SocialStates {}
 
 class SocialGetCommentsSuccessState extends SocialStates {}
 
+class SocialGetNotificationsLoadingState extends SocialStates {}
+
+class SocialGetNotificationsSuccessState extends SocialStates {}
+
 
 class SocialLikePostSuccessState extends SocialStates {}
 

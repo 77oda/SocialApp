@@ -173,16 +173,21 @@ class FeedsScreen extends StatelessWidget
             ),
           ),
           if(model.text !='')
-          Padding(
-            padding: const EdgeInsetsDirectional.only(
-                bottom: 5.0
-            ),
-            child: Text(
-              '${model.text}',
-              style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                color: Colors.black
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsetsDirectional.only(
+                    bottom: 5.0
+                ),
+                child: Text(
+                  '${model.text}',
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                    color: Colors.black
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: 5,)
+            ],
           ),
           if(model.postImage != '')
             ClipRRect(
