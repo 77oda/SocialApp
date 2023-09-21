@@ -3,6 +3,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test123/models/social_app/notification_model.dart';
+import 'package:test123/modules/social_app/post_details/post_details_screen.dart';
 import 'package:test123/shared/components/constants.dart';
 import 'package:video_player/video_player.dart';
 import '../../../layout/social_app/cubit/cubit.dart';
@@ -63,7 +64,7 @@ class NotificationsScreen extends StatelessWidget {
   String convertToAgo(DateTime input){
     Duration diff = DateTime.now().difference(input);
     if(diff.inDays >= 1){
-      return '${diff.inDays} day(s) ago';
+      return '${diff.inDays} day ago';
     } else if(diff.inHours >= 1){
       return '${diff.inHours} hour ago';
     } else if(diff.inMinutes >= 1){
@@ -78,7 +79,10 @@ class NotificationsScreen extends StatelessWidget {
     DateTime? t = DateTime.parse(model.dateTime =='' ? '2023-08-19 02:12:20.793225':"${model.dateTime}");
     String? time= convertToAgo(t);
     return InkWell(
-      onTap: (){},
+      onTap: (){
+        SocialCubit.get(context).getPostDetails('${model.postId}');
+        navigateTo(context, PostDetailsScreen(postId: model.postId,));
+      },
       child: Column(
         children: [
           ListTile(

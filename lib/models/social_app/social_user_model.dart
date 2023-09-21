@@ -18,7 +18,8 @@ class SocialUserModel {
     this.cover,
     this.bio,
     this.isEmailVerified,
-    this.nameArray
+    this.nameArray,
+
   });
 
   SocialUserModel.fromJson(Map<String, dynamic> json)
@@ -49,3 +50,5 @@ class SocialUserModel {
     };
   }
 }
+
+

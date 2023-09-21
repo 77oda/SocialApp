@@ -36,9 +36,12 @@ class SocialGetPostsErrorState extends SocialStates
   final String error;
 
   SocialGetPostsErrorState(this.error);
-
-
 }
+
+class SocialGetPostDetailsLoadingState extends SocialStates {}
+
+class SocialGetPostDetailsSuccessState extends SocialStates {}
+
 
 class SocialGetCommentsLoadingState extends SocialStates {}
 
@@ -136,5 +139,10 @@ class SocialGetMessagesSuccessState extends SocialStates {}
 
 class SocialGetMessagesLoadingState extends SocialStates {}
 
-
 class SocialEditVideoSuccessState extends SocialStates {}
+
+class SocialFollowLoadingState extends SocialStates {}
+
+class SocialFollowErrorState extends SocialStates {}
+
+class SocialFollowSuccessState extends SocialStates {}

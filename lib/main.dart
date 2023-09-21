@@ -31,7 +31,6 @@ void main() async {
   await Firebase.initializeApp();
 
   var token = await FirebaseMessaging.instance.getToken();
-  print(token);
 
 
   // foreground fcm

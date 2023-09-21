@@ -11,6 +11,7 @@ import '../../../models/social_app/post_model.dart';
 import '../../../shared/styles/colors.dart';
 import '../../../shared/styles/icon_broken.dart';
 import '../comments/comments_screen.dart';
+import '../visit_profile/visit_profile_screen.dart';
 
 class FeedsScreen extends StatelessWidget
 {
@@ -110,10 +111,18 @@ class FeedsScreen extends StatelessWidget
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 25.0,
-                backgroundImage: NetworkImage(
-                  '${model.image}',
+              InkWell(
+                onTap: (){
+                  if(model.uId != uId){
+                  SocialCubit.get(context).getProfile(model.uId);
+                  navigateTo(context, VisitProfileScreen());
+                  }
+                },
+                child: CircleAvatar(
+                  radius: 25.0,
+                  backgroundImage: NetworkImage(
+                    '${model.image}',
+                  ),
                 ),
               ),
               const SizedBox(

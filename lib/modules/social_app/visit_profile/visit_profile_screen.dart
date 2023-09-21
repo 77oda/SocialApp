@@ -122,7 +122,7 @@ class VisitProfileScreen extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Text(
-                                    '0',
+                                    SocialCubit.get(context).followersVisit == null ? '0' :'${SocialCubit.get(context).followersVisit.length}',
                                     style: Theme.of(context).textTheme.subtitle2,
                                   ),
                                   Text(
@@ -139,7 +139,7 @@ class VisitProfileScreen extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Text(
-                                    '0',
+                                    SocialCubit.get(context).followingsVisit == null ? '0' :'${SocialCubit.get(context).followingsVisit.length}',
                                     style: Theme.of(context).textTheme.subtitle2,
                                   ),
                                   Text(
@@ -154,27 +154,20 @@ class VisitProfileScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // OutlinedButton(
-                    //   onPressed: () {
-                    //     navigateTo(
-                    //       context,
-                    //       EditProfileScreen(),
-                    //     );
-                    //   },
-                    //   child: const Row(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     children: [
-                    //       Icon(
-                    //         IconBroken.Edit,
-                    //         size: 20.0,
-                    //       ),
-                    //       SizedBox(
-                    //         width: 5,
-                    //       ),
-                    //       Text('Edit profile')
-                    //     ],
-                    //   ),
-                    // ),
+                    // if(SocialCubit.get(context).userModel.followings)
+                    OutlinedButton(
+                      onPressed: () {
+                        SocialCubit.get(context).clickFollow('${SocialCubit.get(context).profileModel!.uId}');
+                      },
+                      child:  Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            SocialCubit.get(context).ids.contains(SocialCubit.get(context).profileModel!.uId) ? 'unFollow'  :'Follow',
+                          )
+                        ],
+                      ),
+                    ),
                     Row(
                       children: [
                         Expanded(
@@ -512,7 +505,7 @@ Widget listViewVisit(context) {
           separatorBuilder: (context, index) => const SizedBox(
             height: 8.0,
           ),
-          itemCount: SocialCubit.get(context).listViewPosts.length,
+          itemCount: SocialCubit.get(context).listViewPostsVisit.length,
         )
       : Padding(
           padding: const EdgeInsets.only(top: 100),

@@ -56,7 +56,7 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
     required String email,
     required String phone,
     required String uId,
-    required List nameArray
+    required List nameArray,
   }) {
     SocialUserModel model = SocialUserModel(
       name: name,
@@ -67,13 +67,25 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
       cover: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
       image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
       isEmailVerified: false,
-      nameArray: nameArray
+      nameArray: nameArray,
     );
 
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
-        .set(model.toMap())
+        .set({
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'uId': uId,
+      'bio': '',
+      'cover': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+      'image': 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+      'isEmailVerified': false,
+      'nameArray': nameArray,
+      'followers': [],
+      "followings":[]
+    })
         .then((value)
     {
       emit(SocialCreateUserSuccessState());

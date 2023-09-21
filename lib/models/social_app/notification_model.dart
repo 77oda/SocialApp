@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NotificationModel{
   List<NotifyModel> data =[];
@@ -21,16 +20,6 @@ class NotifyModel
   String? name;
   String? postId;
 
-  NotifyModel({
-    this.name,
-    this.uId,
-    this.image,
-    this.dateTime,
-    this.comment,
-    this.postId,
-    this.type
-  });
-
   NotifyModel.fromJson(Map<String, dynamic> json)
   {
     name = json['name'];
@@ -40,18 +29,5 @@ class NotifyModel
     comment = json['comment'];
     postId = json['postId'];
     type = json['type'];
-  }
-
-  Map<String, dynamic> toMap()
-  {
-    return {
-      'name':name,
-      'uId':uId,
-      'image':image,
-      'dateTime':dateTime,
-      'comment':comment,
-      'postId':postId,
-      'type':type
-    };
   }
 }

@@ -25,12 +25,12 @@ class SocialLoginCubit extends Cubit<SocialLoginStates> {
     )
         .then((value) {
 
-      if (FirebaseAuth.instance.currentUser!.emailVerified == true) {
+      // if (FirebaseAuth.instance.currentUser!.emailVerified == true) {
         emit(SocialLoginSuccessState(value.user!.uid));
-      }
-      if (FirebaseAuth.instance.currentUser!.emailVerified == false) {
-        emit(SocialLoginErrorState('This email is not verified'));
-      }
+      // }
+      // if (FirebaseAuth.instance.currentUser!.emailVerified == false) {
+      //   emit(SocialLoginErrorState('This email is not verified'));
+      // }
     }).catchError((error) {
       emit(SocialLoginErrorState(error.toString()));
     });

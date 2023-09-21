@@ -92,26 +92,43 @@ class ProfileScreen extends StatelessWidget
                   ),
                   child: Row(
                     children: [
+                      // Expanded(
+                      //   child: InkWell(
+                      //     child: Container(
+                      //       child: Column(
+                      //         children: [
+                      //           Text(
+                      //             '${SocialCubit.get(context).numPosts}',
+                      //             style: Theme.of(context).textTheme.subtitle2!.copyWith(color: Colors.white),
+                      //           ),
+                      //           Text(
+                      //             'Posts',
+                      //             style: Theme.of(context).textTheme.caption!.copyWith(color: Colors.white),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //       decoration:  BoxDecoration(
+                      //           color: defaultColor,
+                      //           borderRadius: BorderRadius.circular(20),
+                      //           border: Border.all(color: defaultColor)
+                      //       ),
+                      //     ),
+                      //     onTap: () {},
+                      //   ),
+                      // ),
                       Expanded(
                         child: InkWell(
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Text(
-                                  '${SocialCubit.get(context).numPosts}',
-                                  style: Theme.of(context).textTheme.subtitle2!.copyWith(color: Colors.white),
-                                ),
-                                Text(
-                                  'Posts',
-                                  style: Theme.of(context).textTheme.caption!.copyWith(color: Colors.white),
-                                ),
-                              ],
-                            ),
-                            decoration:  BoxDecoration(
-                              color: defaultColor,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: defaultColor)
-                            ),
+                          child: Column(
+                            children: [
+                              Text(
+                                '${SocialCubit.get(context).numPosts}',
+                                style: Theme.of(context).textTheme.subtitle2!,
+                              ),
+                              Text(
+                                'Posts',
+                                style: Theme.of(context).textTheme.caption!,
+                              ),
+                            ],
                           ),
                           onTap: () {},
                         ),
@@ -121,7 +138,7 @@ class ProfileScreen extends StatelessWidget
                           child: Column(
                             children: [
                               Text(
-                                '0',
+                                SocialCubit.get(context).followers == null ? '0' :'${SocialCubit.get(context).followers.length}',
                                 style: Theme.of(context).textTheme.subtitle2,
                               ),
                               Text(
@@ -138,7 +155,7 @@ class ProfileScreen extends StatelessWidget
                           child: Column(
                             children: [
                               Text(
-                                '0',
+                                SocialCubit.get(context).followings == null ? '0' :'${SocialCubit.get(context).followings.length}',
                                 style: Theme.of(context).textTheme.subtitle2,
                               ),
                               Text(
