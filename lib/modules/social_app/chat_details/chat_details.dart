@@ -26,12 +26,19 @@ class ChatDetailsScreen extends StatelessWidget {
         SocialCubit.get(context).getMessages(
           receiverId: personModel.uId!,
         );
-
         return BlocConsumer<SocialCubit, SocialStates>(
           listener: (context, state) {},
           builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
+                leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    IconBroken.Arrow___Left_2,
+                  ),
+                ),
                 titleSpacing: 0.0,
                 title: Row(
                   children: [
@@ -63,8 +70,9 @@ class ChatDetailsScreen extends StatelessWidget {
                           {
                             var message = SocialCubit.get(context).messages[index];
 
-                            if(SocialCubit.get(context).userModel!.uId == message.senderId)
+                            if(SocialCubit.get(context).userModel!.uId == message.senderId) {
                               return buildMyMessage(message);
+                            }
 
                             return buildMessage(message);
                           },

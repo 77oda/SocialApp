@@ -42,6 +42,7 @@ class SocialLoginScreen extends StatelessWidget {
               SocialCubit.get(context).getPosts();
               SocialCubit.get(context).getUsers();
               SocialCubit.get(context).getUserData();
+              SocialCubit.get(context).getStories();
               navigateAndFinish(
                 context,
                 SocialLayout(),

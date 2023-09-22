@@ -54,8 +54,7 @@ class SocialGetNotificationsSuccessState extends SocialStates {}
 
 class SocialLikePostSuccessState extends SocialStates {}
 
-class SocialLikePostErrorState extends SocialStates
-{
+class SocialLikePostErrorState extends SocialStates {
   final String error;
 
   SocialLikePostErrorState(this.error);
@@ -139,10 +138,10 @@ class SocialGetMessagesSuccessState extends SocialStates {}
 
 class SocialGetMessagesLoadingState extends SocialStates {}
 
-class SocialEditVideoSuccessState extends SocialStates {}
+class SocialFollowSuccessState extends SocialStates {}
 
 class SocialFollowLoadingState extends SocialStates {}
 
 class SocialFollowErrorState extends SocialStates {}
 
-class SocialFollowSuccessState extends SocialStates {}
+class SocialEditVideoSuccessState extends SocialStates{}

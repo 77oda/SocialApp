@@ -19,6 +19,7 @@ import '../../../models/social_app/follow_model.dart';
 import '../../../models/social_app/post_model.dart';
 import '../../../models/social_app/social_user_model.dart';
 
+import '../../../models/social_app/story_model.dart';
 import '../../../modules/social_app/chats/chats_screen.dart';
 import '../../../modules/social_app/feeds/feeds_screen.dart';
 import '../../../modules/social_app/new_post/new_post_screen.dart';
@@ -636,6 +637,126 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
   //Post//////////////////////////////////////////////////////////
+
+
+  //Story//////////////////////////////////////////////////////////
+  File? storyFile;
+
+  Future<void> getStoryImage(context) async {
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedFile != null) {
+      storyFile = File(pickedFile.path);
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Center(
+                child: Text(
+                 'Are you sure about the story?',
+                  style: TextStyle(fontSize: 18),
+                )),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween,
+                  children: [
+                    OutlinedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                           'cancel'
+                        )),
+                    OutlinedButton(
+                        onPressed: () {
+                          var time=DateTime.now();
+                         uploadStoryFile(dateTime: '$time') ;
+                         Navigator.pop(context);
+                        },
+                        child: const Text(
+                          'done'
+                            ))
+                  ],
+                )
+              ],
+            ),
+          ));
+      emit(SocialPostImagePickedSuccessState());
+    } else {
+      print('No image selected.');
+      emit(SocialPostImagePickedErrorState());
+    }
+  }
+
+  void uploadStoryFile({
+    required String dateTime,
+  })
+  {
+    emit(SocialCreatePostLoadingState());
+
+    firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('stories/${Uri.file(storyFile!.path).pathSegments.last}')
+        .putFile(storyFile!)
+        .then((value) {
+      value.ref.getDownloadURL().then((value)
+      {
+          createStory(
+            dateTime: dateTime,
+            storyImage: value,
+          );
+      }).catchError((error)
+      {
+        emit(SocialCreatePostErrorState());
+      });
+    }).catchError((error)
+    {
+      emit(SocialCreatePostErrorState());
+    });
+  }
+
+  void createStory({
+    required String dateTime,
+    required String storyImage,
+  })
+  {
+    emit(SocialCreatePostLoadingState());
+
+    StoryModel model = StoryModel(
+      name: userModel!.name,
+      image: userModel!.image,
+      uId:uId,
+      dateTime: dateTime,
+      storyImage:storyImage
+    );
+    FirebaseFirestore.instance
+        .collection('stories')
+        .add(model.toMap())
+        .then((value)
+    {
+      getStories();
+      emit(SocialCreatePostSuccessState());
+    }).catchError((error) {emit(SocialCreatePostErrorState());});
+  }
+
+  List<StoryModel> stories = [];
+  void getStories ()
+  {
+    FirebaseFirestore.instance.collection('stories').orderBy('dateTime',descending: true).snapshots().listen((event) {
+      stories=[];
+      event.docs.forEach((element) {
+        stories.add(StoryModel.fromJson(element.data()));
+      });
+      emit(SocialGetPostsSuccessState());
+    });
+  }
+
+  //Story//////////////////////////////////////////////////////////
 
 
 

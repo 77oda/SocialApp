@@ -35,33 +35,105 @@ class FeedsScreen extends StatelessWidget
               child: Column(
                 children:
                 [
-                  Card(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    elevation: 5.0,
-                    margin: const EdgeInsets.all(
-                      8.0,
-                    ),
-                    child: Stack(
-                      alignment: AlignmentDirectional.bottomEnd,
-                      children: [
-                        const Image(
-                          image: NetworkImage(
-                            'https://image.freepik.com/free-photo/horizontal-shot-smiling-curly-haired-woman-indicates-free-space-demonstrates-place-your-advertisement-attracts-attention-sale-wears-green-turtleneck-isolated-vibrant-pink-wall_273609-42770.jpg',
-                          ),
-                          fit: BoxFit.cover,
-                          height: 200.0,
-                          width: double.infinity,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'communicate with friends',
-                            style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                              color: Colors.white,
+                  // Card(
+                  //   clipBehavior: Clip.antiAliasWithSaveLayer,
+                  //   elevation: 5.0,
+                  //   margin: const EdgeInsets.all(
+                  //     8.0,
+                  //   ),
+                  //   child: Stack(
+                  //     alignment: AlignmentDirectional.bottomEnd,
+                  //     children: [
+                  //       const Image(
+                  //         image: NetworkImage(
+                  //           'https://image.freepik.com/free-photo/horizontal-shot-smiling-curly-haired-woman-indicates-free-space-demonstrates-place-your-advertisement-attracts-attention-sale-wears-green-turtleneck-isolated-vibrant-pink-wall_273609-42770.jpg',
+                  //         ),
+                  //         fit: BoxFit.cover,
+                  //         height: 200.0,
+                  //         width: double.infinity,
+                  //       ),
+                  //       Padding(
+                  //         padding: const EdgeInsets.all(8.0),
+                  //         child: Text(
+                  //           'communicate with friends',
+                  //           style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                  //             color: Colors.white,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+
+                  SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 20),
+                      child: SizedBox(
+                        height: 75,
+                        child: Row(
+                          children: [
+                            InkWell(
+                              child: Stack(
+                                children: <Widget>[
+                                   CircleAvatar(
+                                     backgroundImage: NetworkImage(
+                                         "${SocialCubit.get(context).userModel!.image}",),
+                                     radius: 45,
+                                   ),
+                                  Positioned(
+                                    bottom: 0.0,
+                                    right: 7,
+                                    child: Container(
+                                      height: 20,
+                                      width: 20,
+                                      decoration: const BoxDecoration(
+                                        color: defaultColor,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                        size: 15,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              onTap: (){
+                                SocialCubit.get(context).getStoryImage(context);
+                              },
                             ),
-                          ),
+                            const SizedBox(width: 10,),
+                            Expanded(
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) => const Stack(
+                                  children: <Widget>[
+                                     CircleAvatar(
+                                       backgroundColor: defaultColor,
+                                      radius: 40,
+                                    ),
+                                    Positioned(
+                                      right: 0.5,
+                                      left: 0.5,
+                                      top: 4,
+                                      bottom: 4,
+                                      child: CircleAvatar(
+                                        backgroundImage: NetworkImage(
+                                            "https://s3.amazonaws.com/wll-community-production/images/no-avatar.png"),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                separatorBuilder: (context, index) => const SizedBox(
+                                  width: 10.0,
+                                ),
+                                itemCount: 20,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                   ListView.separated(
