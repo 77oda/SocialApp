@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   sqflite: ^2.0.3
   intl: ^0.18.1
+  splash_screen_view: ^3.0.0
   conditional_builder_null_safety: ^0.0.6
   bloc: ^8.1.0
   flutter_bloc: ^8.1.1
@@ -56,7 +57,7 @@ dependencies:
   firebase_auth: ^4.7.1
   cloud_firestore: ^4.8.3
   firebase_storage: ^11.2.5
-  firebase_messaging: ^14.6.5
+  firebase_messaging: ^14.6.8
 
 dev_dependencies:
   flutter_test:

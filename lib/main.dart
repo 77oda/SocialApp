@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:splash_screen_view/SplashScreenView.dart';
 import 'package:test123/shared/bloc_observer.dart';
 import 'package:test123/shared/components/components.dart';
 import 'package:test123/shared/components/constants.dart';
@@ -30,13 +31,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  var token = await FirebaseMessaging.instance.getToken();
+  // var token = await FirebaseMessaging.instance.getToken();
 
 
   // foreground fcm
   FirebaseMessaging.onMessage.listen((event)
   {
-    //print('on message');
     print(event.data.toString());
 
     showToast(text: 'on message', state: ToastStates.SUCCESS,);
@@ -45,7 +45,6 @@ void main() async {
   // when click on notification to open app
   FirebaseMessaging.onMessageOpenedApp.listen((event)
   {
-   // print('on message opened app');
     print(event.data.toString());
 
     showToast(text: 'on message opened app', state: ToastStates.SUCCESS,);
@@ -53,8 +52,6 @@ void main() async {
 
   // background fcm
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-
-
 
   // FirebaseAuth.instance.authStateChanges().listen((user) {
   //   if (user == null) {
@@ -72,10 +69,10 @@ void main() async {
 
   if(uId != null)
   {
-    widget = SocialLayout();
+    widget = splashScreen_layout();
   } else
   {
-    widget = SocialLoginScreen();
+    widget = splashScreen_Login();
   }
 
   runApp(MyApp(startWidget: widget,));
@@ -114,3 +111,39 @@ class MyApp extends StatelessWidget {
 
 
 
+Widget splashScreen_Login() => SplashScreenView(
+  navigateRoute: SocialLoginScreen(),
+  duration: 4000,
+  imageSize: 200,
+  imageSrc: "assets/image/Social.png",
+  text: "  ",
+  textType: TextType.ScaleAnimatedText,
+  textStyle: TextStyle(
+    fontSize: 38.0,
+    color: Colors.blue[800],
+    fontWeight: FontWeight.w900,
+  ),
+  backgroundColor: Colors.white,
+);
+
+Widget splashScreen_layout() => SplashScreenView(
+  navigateRoute: SocialLayout(),
+  duration: 4000,
+  imageSize: 180,
+  imageSrc: "assets/image/Social.png",
+  text: " Social App ",
+  textType: TextType.ColorizeAnimationText,
+  textStyle: TextStyle(
+    fontSize: 35.0,
+    color: Colors.blue[800],
+    fontWeight: FontWeight.w900,
+  ),
+  backgroundColor: Colors.white,
+  pageRouteTransition: PageRouteTransition.CupertinoPageRoute,
+  colors: const [
+    Colors.pink,
+    Colors.pinkAccent,
+    Colors.purpleAccent,
+    Color.fromRGBO(179, 157, 219, 1)
+  ],
+);

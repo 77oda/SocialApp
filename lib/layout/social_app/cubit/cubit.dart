@@ -736,7 +736,10 @@ class SocialCubit extends Cubit<SocialStates> {
     );
     FirebaseFirestore.instance
         .collection('stories')
-        .add(model.toMap())
+        .doc(uId)
+        .set({
+      'story': FieldValue.arrayUnion([model.toMap()])
+    },SetOptions(merge: true))
         .then((value)
     {
       getStories();
@@ -744,15 +747,28 @@ class SocialCubit extends Cubit<SocialStates> {
     }).catchError((error) {emit(SocialCreatePostErrorState());});
   }
 
+  Map storyMap={};
   List<StoryModel> stories = [];
+  List<String> idStories = [];
+
   void getStories ()
   {
-    FirebaseFirestore.instance.collection('stories').orderBy('dateTime',descending: true).snapshots().listen((event) {
+    emit(SocialGetStoryLoadingState());
+
+    FirebaseFirestore.instance.collection('stories').snapshots().listen((event) {
       stories=[];
+      storyMap={};
+      idStories=[];
       event.docs.forEach((element) {
-        stories.add(StoryModel.fromJson(element.data()));
+        idStories.add(element.id);
+        List s= element['story'] as List ;
+        s.forEach((e) {
+          stories.add(StoryModel.fromJson(e));
+        });
+        storyMap.addEntries(<String,List<StoryModel>>{element.id:stories}.entries);
+        stories=[];
       });
-      emit(SocialGetPostsSuccessState());
+      emit(SocialGetStorySuccessState());
     });
   }
 

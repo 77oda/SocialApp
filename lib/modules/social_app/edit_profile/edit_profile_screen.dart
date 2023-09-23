@@ -253,51 +253,58 @@ class EditProfileScreen extends StatelessWidget {
                       if (value.isEmpty) {
                         return 'phone number must not be empty';
                       }
-
                       return null;
                     },
                     label: 'Phone',
                     prefix: IconBroken.Call,
                   ),
-                  Row(
-                    children: [
-                      OutlinedButton(
-                        onPressed: ()
-                        {
-                          FirebaseMessaging.instance.subscribeToTopic('announcements');
-                        },
-                        child: const Text(
-                          'subscribe',
+                  const SizedBox(height: 30,),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text('Notification :',style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+                        SizedBox(width: 20,),
+                        OutlinedButton(
+                          onPressed: ()
+                          {
+                            FirebaseMessaging.instance.subscribeToTopic('announcements');
+                          },
+                          child: const Text(
+                            'subscribe',
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 20.0,
-                      ),
-                      OutlinedButton(
-                        onPressed: ()
-                        {
-                          FirebaseMessaging.instance.unsubscribeFromTopic('announcements');
-                        },
-                        child: const Text(
-                          'unsubscribe',
+                        const SizedBox(
+                          width: 20.0,
                         ),
-                      )
-                      ,
-                      OutlinedButton(
-                        onPressed: () async
-                        {
-                          await FirebaseAuth.instance.signOut();
-                          await CacheHelper.removeData(key: 'uId');
-                          uId=null;
-                          navigateAndFinish(context, SocialLoginScreen());
-                          SocialCubit.get(context).currentIndex=0;
-                        },
-                        child: const Text(
-                          'LOGOUT',
+                        OutlinedButton(
+                          onPressed: ()
+                          {
+                            FirebaseMessaging.instance.unsubscribeFromTopic('announcements');
+                          },
+                          child: const Text(
+                            'unsubscribe',
+                          ),
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
+                  const SizedBox(height: 140,),
+                  OutlinedButton(
+                    onPressed: () async
+                    {
+                      await FirebaseAuth.instance.signOut();
+                      await CacheHelper.removeData(key: 'uId');
+                      uId=null;
+                      navigateAndFinish(context, SocialLoginScreen());
+                      SocialCubit.get(context).currentIndex=0;
+                    },
+                    child: const Text(
+                      'LOGOUT',
+                      style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
+                    ),
+                  )
                 ],
               ),
             ),
