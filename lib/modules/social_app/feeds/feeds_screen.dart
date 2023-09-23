@@ -31,7 +31,8 @@ class FeedsScreen extends StatelessWidget
           },
           child:ConditionalBuilder(
             condition: SocialCubit.get(context).posts.isNotEmpty && state is! SocialGetStoryLoadingState ,
-            builder: (context) => SingleChildScrollView(
+            builder: (context) =>
+                SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children:
