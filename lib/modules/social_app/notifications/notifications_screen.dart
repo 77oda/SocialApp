@@ -33,7 +33,8 @@ class NotificationsScreen extends StatelessWidget {
           ),
           body:ConditionalBuilder(
               condition: state is! SocialGetNotificationsLoadingState,
-              builder: (context) => Padding(
+              builder: (context) => SocialCubit.get(context).notificationModel!=null ?
+              Padding(
                   padding:const EdgeInsets.all(5.0),
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
@@ -53,7 +54,8 @@ class NotificationsScreen extends StatelessWidget {
                   },
                   itemCount:SocialCubit.get(context).notificationModel!.length,
                 ),
-          ),
+          ):
+              const Center(child: Text('No notification',textAlign: TextAlign.center,style: TextStyle(color: Colors.grey,fontSize: 20,fontWeight: FontWeight.bold,),)),
               fallback: (context) =>const Center(child: CircularProgressIndicator())
           )
         );
